@@ -65,14 +65,13 @@ class App(customtkinter.CTk):
             self.create_video_quality_combobox()
             # Pass URL and quality of video
             video_quality = self.video_quality_combobox.get()
-            self.download_video_btn(url, video_quality)
-            
-
+            self.download_video_btn(url)
+        
         elif self.checkbox_audio.get() == "on":
             self.download_audio_btn(url)
-
+        
         elif self.check_var_audio.get() == "on" and self.checkbox_audio.get() == "on":
-            self.download_video_btn(url, self.video_quality_combobox.get())
+            self.download_video_btn(url)
             self.download_audio_btn(url)
 
         else:
@@ -89,51 +88,50 @@ class App(customtkinter.CTk):
             # Create the combobox
             self.video_quality_combobox = customtkinter.CTkComboBox(
                 self,
-                values=["High", "Medium", "Low"],
+                values=["2160p", "1440p", "1080p", "720p",
+                         "480p", "360p", "240p", "144p"],
                 variable=self.qualitimenu
             )
-            self.video_quality_combobox.set("High")
             self.video_quality_combobox.place(relx=0.4, rely=0.5, anchor=tk.CENTER)
 
     def destroy_video_quality_combobox(self):
-        if isinstance(self.video_quality_combobox, None):
+        if self.video_quality_combobox is not None:
             # Destroy combobox
             self.video_quality_combobox.destroy()
             self.video_quality_combobox = None
 
-    def download_video_btn(self, url, video_quality):
+    def download_video_btn(self, url):
+        download_label = customtkinter.CTkLabel(self, text="", width=120, height=25)
+        download_label.place(relx=0.5, rely=0.65, anchor=tk.CENTER) 
+        
         try:
-            """Processing .mp4 download"""
-            yt = YouTube(url)
+            if self.video_quality_combobox is not None:
+                video_quality = self.video_quality_combobox.get()
 
-            # filter video streams
-            video_streams = yt.streams.filter(
-                file_extension="mp4",
-                resolution=video_quality
-            )
-            
-            if video_streams:
-                if video_quality == "High":
-                    video = video_streams.get_highest_resolution()
-                elif video_quality == "Medium":
-                    # Customize based on your requirements
-                    # For example, get the medium resolution stream
-                    video = video_streams.filter(res="720p").first()
-                elif video_quality == "Low":
-                    # Customize based on your requirements
-                    # For example, get the low resolution stream
-                    video = video_streams.filter(res="480p").first()
-                else:
-                    print("Invalid video quality selection.")
-                    return
+                """Processing .mp4 download"""
+                yt = YouTube(url)
+
+                # Default stream value (you might want to set it to a default)
+                stream = None
+
+                if video_quality == "2160p":
+                    stream = yt.streams.filter(res="2160p").first()
+                elif video_quality == "1440p":
+                    stream = yt.streams.filter(res="1440p").first()
+                elif video_quality == "1080p":
+                    stream = yt.streams.filter(res="1080p").first()
+                elif video_quality == "720p":
+                    stream = yt.streams.filter(res="720p").first()
+                elif video_quality == "480p":
+                    stream = yt.streams.filter(res="480p").first()
+                elif video_quality == "360p":
+                    stream = yt.streams.filter(res="360p").first()
                 
-            out_file = video.download()
-
-            download_label = customtkinter.CTkLabel(self,
-                                           text="Download complete!",
-                                           width=120,
-                                           height=25)
-            download_label.place(relx=0.5, rely=0.65, anchor=tk.CENTER) 
+                if stream:
+                    stream.download()
+                    download_label.configure(text="Downloaded!")
+                else:
+                    download_label.configure(text="No available resolution!")
         except Exception as e:
             raise e
 
