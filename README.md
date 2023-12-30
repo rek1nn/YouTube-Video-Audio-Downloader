@@ -3,12 +3,12 @@ Now it just download .mp3 from video
 
 In plans: 
 
--> sexy GUI
+-> [ ] sexy GUI
 
--> choice between Video and Audio
+-> [ ] choice between Video and Audio
 
--> choosing between qualitys
+-> [x] choose and download between qualities
 
--> progress bar
+-> [ ] progress bar
 
--> compressing audio/video
+-> [ ] compressing audio/video
