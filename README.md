@@ -1,7 +1,7 @@
 # Version 1.0
 In plans: 
 
--> [ ] sexy GUI
+-> [x] sexy GUI
 
 -> [x] choice between Video and Audio
 
